@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnFlow - Advanced Learning Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            text-align: center;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px var(--shadow);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .topics-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .topic-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateX(5px);
+        }
+
+        .topic-info {
+            flex: 1;
+        }
+
+        .topic-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .topic-meta {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .revision-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .revision-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .revision-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .revision-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .revision-count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .revision-item {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .revision-topic {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .revision-date {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 30px 60px var(--shadow);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .revision-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .animate-in {
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header animate-in">
+            <h1>📚 LearnFlow</h1>
+            <p>Advanced Learning Tracker with Spaced Repetition System</p>
+        </div>
+
+        <div class="stats animate-in">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTopics">0</div>
+                <div class="stat-label">Total Topics</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="todayTopics">0</div>
+                <div class="stat-label">Today's Topics</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="revisionsToday">0</div>
+                <div class="stat-label">Revisions Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="streakDays">0</div>
+                <div class="stat-label">Learning Streak</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="card animate-in">
+                <h2>📝 Add Today's Learning</h2>
+                <form id="topicForm">
+                    <div class="input-group">
+                        <label for="topicTitle">Topic/Chapter Title</label>
+                        <input type="text" id="topicTitle" placeholder="Enter topic title..." required>
+                    </div>
+                    <div class="input-group">
+                        <label for="topicDescription">Description/Notes</label>
+                        <textarea id="topicDescription" rows="3" placeholder="Add your notes here..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="topicCategory">Category</label>
+                        <select id="topicCategory">
+                            <option value="General">General</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Science">Science</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Language">Language</option>
+                            <option value="History">History</option>
+                            <option value="Literature">Literature</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="topicDifficulty">Difficulty Level</label>
+                        <select id="topicDifficulty">
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">✨ Add Topic</button>
+                </form>
+            </div>
+
+            <div class="card animate-in">
+                <h2>📅 Today's Topics</h2>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchToday" placeholder="Search today's topics...">
+                </div>
+                <div class="filter-tabs">
+                    <div class="filter-tab active" data-filter="all">All</div>
+                    <div class="filter-tab" data-filter="Easy">Easy</div>
+                    <div class="filter-tab" data-filter="Medium">Medium</div>
+                    <div class="filter-tab" data-filter="Hard">Hard</div>
+                </div>
+                <div class="topics-list" id="todayTopicsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📖</div>
+                        <p>No topics added today. Start learning!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card animate-in">
+            <h2>🔄 Revision Schedule</h2>
+            <p style="margin-bottom: 20px; color: var(--gray);">
+                Spaced repetition schedule: Day 7 → Day 16 → Day 22 → Day 30 → Day 36 → Day 43
+            </p>
+            <div class="revision-sections" id="revisionSections">
+                <!-- Revision cards will be dynamically generated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Modal for topic details -->
+    <div class="modal" id="topicModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        class LearningTracker {
+            constructor() {
+                this.topics = this.loadData('topics') || [];
+                this.stats = this.loadData('stats') || {
+                    totalTopics: 0,
+                    streak: 0,
+                    lastStudyDate: null
+                };
+                this.revisionIntervals = [7, 16, 22, 30, 36, 43];
+                this.currentFilter = 'all';
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateStats();
+                this.renderTodayTopics();
+                this.renderRevisionSections();
+                this.updateStreak();
+            }
+
+            bindEvents() {
+                document.getElementById('topicForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addTopic();
+                });
+
+                document.getElementById('searchToday').addEventListener('input', (e) => {
+                    this.filterTodayTopics(e.target.value);
+                });
+
+                document.querySelectorAll('.filter-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.setFilter(e.target.dataset.filter);
+                    });
+                });
+            }
+
+            addTopic() {
+                const title = document.getElementById('topicTitle').value.trim();
+                const description = document.getElementById('topicDescription').value.trim();
+                const category = document.getElementById('topicCategory').value;
+                const difficulty = document.getElementById('topicDifficulty').value;
+
+                if (!title) {
+                    this.showToast('Please enter a topic title', 'error');
+                    return;
+                }
+
+                const topic = {
+                    id: Date.now(),
+                    title,
+                    description,
+                    category,
+                    difficulty,
+                    dateAdded: new Date().toISOString(),
+                    revisions: this.generateRevisionDates(),
+                    completed: false
+                };
+
+                this.topics.push(topic);
+                this.saveData('topics', this.topics);
+                
+                this.stats.totalTopics++;
+                this.updateLastStudyDate();
+                this.saveData('stats', this.stats);
+
+                this.clearForm();
+                this.updateStats();
+                this.renderTodayTopics();
+                this.renderRevisionSections();
+                this.showToast('Topic added successfully! 🎉');
+            }
+
+            generateRevisionDates() {
+                const baseDate = new Date();
+                return this.revisionIntervals.map((interval, index) => {
+                    const revisionDate = new Date(baseDate);
+                    revisionDate.setDate(baseDate.getDate() + interval);
+                    return {
+                        date: revisionDate.toISOString(),
+                        interval: interval,
+                        revision: index + 1,
+                        completed: false
+                    };
+                });
+            }
+
+            updateLastStudyDate() {
+                const today = new Date().toDateString();
+                const lastStudyDate = this.stats.lastStudyDate;
+                
+                if (lastStudyDate !== today) {
+                    if (lastStudyDate) {
+                        const lastDate = new Date(lastStudyDate);
+                        const currentDate = new Date(today);
+                        const timeDiff = currentDate.getTime() - lastDate.getTime();
+                        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        
+                        if (daysDiff === 1) {
+                            this.stats.streak++;
+                        } else if (daysDiff > 1) {
+                            this.stats.streak = 1;
+                        }
+                    } else {
+                        this.stats.streak = 1;
+                    }
+                    this.stats.lastStudyDate = today;
+                }
+            }
+
+            updateStreak() {
+                const today = new Date().toDateString();
+                const lastStudyDate = this.stats.lastStudyDate;
+                
+                if (lastStudyDate) {
+                    const lastDate = new Date(lastStudyDate);
+                    const currentDate = new Date(today);
+                    const timeDiff = currentDate.getTime() - lastDate.getTime();
+                    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                    
+                    if (daysDiff > 1) {
+                        this.stats.streak = 0;
+                        this.saveData('stats', this.stats);
+                    }
+                }
+            }
+
+            getTodayTopics() {
+                const today = new Date().toDateString();
+                return this.topics.filter(topic => {
+                    const topicDate = new Date(topic.dateAdded).toDateString();
+                    return topicDate === today;
+                });
+            }
+
+            getRevisionTopics(targetDate) {
+                const target = new Date(targetDate).toDateString();
+                const revisionTopics = [];
+
+                this.topics.forEach(topic => {
+                    topic.revisions.forEach(revision => {
+                        const revisionDate = new Date(revision.date).toDateString();
+                        if (revisionDate === target) {
+                            revisionTopics.push({
+                                ...topic,
+                                revisionNumber: revision.revision,
+                                revisionCompleted: revision.completed
+                            });
+                        }
+                    });
+                });
+
+                return revisionTopics;
+            }
+
+            renderTodayTopics() {
+                const container = document.getElementById('todayTopicsList');
+                const topics = this.getTodayTopics();
+                
+                if (topics.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📖</div>
+                            <p>No topics added today. Start learning!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = topics
+                    .filter(topic => this.currentFilter === 'all' || topic.difficulty === this.currentFilter)
+                    .map(topic => `
+                        <div class="topic-item animate-in">
+                            <div class="topic-info">
+                                <div class="topic-title">${topic.title}</div>
+                                <div class="topic-meta">
+                                    ${topic.category} • ${topic.difficulty} • ${this.formatDate(topic.dateAdded)}
+                                </div>
+                                ${topic.description ? `<div class="topic-meta" style="margin-top: 5px;">${topic.description}</div>` : ''}
+                            </div>
+                            <div>
+                                <button class="btn btn-small" onclick="tracker.viewTopic(${topic.id})">View</button>
+                                <button class="btn btn-danger btn-small" onclick="tracker.deleteTopic(${topic.id})">Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+
+            renderRevisionSections() {
+                const container = document.getElementById('revisionSections');
+                const today = new Date();
+                const sections = [];
+
+                // Generate revision sections for the next 50 days
+                for (let i = 0; i < 50; i++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() + i);
+                    const revisionTopics = this.getRevisionTopics(date);
+
+                    if (revisionTopics.length > 0) {
+                        sections.push({
+                            date: date,
+                            topics: revisionTopics,
+                            isToday: i === 0,
+                            isPast: i < 0
+                        });
+                    }
+                }
+
+                container.innerHTML = sections.map(section => `
+                    <div class="revision-card ${section.isToday ? 'today' : ''}">
+                        <div class="revision-header">
+                            <div class="revision-title">
+                                ${section.isToday ? '🎯 Today' : this.formatDate(section.date.toISOString())}
+                            </div>
+                            <div class="revision-count">${section.topics.length}</div>
+                        </div>
+                        <div class="revision-list">
+                            ${section.topics.map(topic => `
+                                <div class="revision-item">
+                                    <div class="revision-topic">
+                                        ${topic.title}
+                                        <span style="color: var(--primary); font-size: 0.8rem; margin-left: 5px;">
+                                            (Revision ${topic.revisionNumber})
+                                        </span>
+                                    </div>
+                                    <div class="revision-date">
+                                        ${topic.category} • ${topic.difficulty}
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${(topic.revisionNumber / 6) * 100}%"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            filterTodayTopics(searchTerm) {
+                const topics = this.getTodayTopics();
+                const filtered = topics.filter(topic => 
+                    topic.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    topic.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    topic.category.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+
+                const container = document.getElementById('todayTopicsList');
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔍</div>
+                            <p>No topics found matching "${searchTerm}"</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = filtered.map(topic => `
+                    <div class="topic-item animate-in">
+                        <div class="topic-info">
+                            <div class="topic-title">${topic.title}</div>
+                            <div class="topic-meta">
+                                ${topic.category} • ${topic.difficulty} • ${this.formatDate(topic.dateAdded)}
+                            </div>
+                            ${topic.description ? `<div class="topic-meta" style="margin-top: 5px;">${topic.description}</div>` : ''}
+                        </div>
+                        <div>
+                            <button class="btn btn-small" onclick="tracker.viewTopic(${topic.id})">View</button>
+                            <button class="btn btn-danger btn-small" onclick="tracker.deleteTopic(${topic.id})">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            setFilter(filter) {
+                this.currentFilter = filter;
+                document.querySelectorAll('.filter-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+                this.renderTodayTopics();
+            }
+
+            viewTopic(id) {
+                const topic = this.topics.find(t => t.id === id);
+                if (!topic) return;
+
+                document.getElementById('modalTitle').textContent = topic.title;
+                document.getElementById('modalContent').innerHTML = `
+                    <p><strong>Category:</strong> ${topic.category}</p>
+                    <p><strong>Difficulty:</strong> ${topic.difficulty}</p>
+                    <p><strong>Date Added:</strong> ${this.formatDate(topic.dateAdded)}</p>
+                    ${topic.description ? `<p><strong>Description:</strong> ${topic.description}</p>` : ''}
+                    <h4 style="margin-top: 20px;">Revision Schedule:</h4>
+                    <ul>
+                        ${topic.revisions.map(revision => `
+                            <li>Revision ${revision.revision}: ${this.formatDate(revision.date)} 
+                                ${revision.completed ? '✅' : '⏳'}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                document.getElementById('topicModal').style.display = 'block';
+            }
+
+            deleteTopic(id) {
+                if (confirm('Are you sure you want to delete this topic?')) {
+                    this.topics = this.topics.filter(t => t.id !== id);
+                    this.saveData('topics', this.topics);
+                    this.stats.totalTopics--;
+                    this.saveData('stats', this.stats);
+                    this.updateStats();
+                    this.renderTodayTopics();
+                    this.renderRevisionSections();
+                    this.showToast('Topic deleted successfully');
+                }
+            }
+
+            updateStats() {
+                const today = new Date().toDateString();
+                const todayTopics = this.getTodayTopics().length;
+                const todayRevisions = this.getRevisionTopics(new Date()).length;
+
+                document.getElementById('totalTopics').textContent = this.topics.length;
+                document.getElementById('todayTopics').textContent = todayTopics;
+                document.getElementById('revisionsToday').textContent = todayRevisions;
+                document.getElementById('streakDays').textContent = this.stats.streak;
+            }
+
+            clearForm() {
+                document.getElementById('topicForm').reset();
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+            }
+
+            showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = `toast ${type}`;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            saveData(key, data) {
+                try {
+                    const jsonData = JSON.stringify(data);
+                    // Using a simple object to store data in memory
+                    if (!window.learningTrackerData) {
+                        window.learningTrackerData = {};
+                    }
+                    window.learningTrackerData[key] = jsonData;
+                } catch (error) {
+                    console.error('Error saving data:', error);
+                }
+            }
+
+            loadData(key) {
+                try {
+                    if (!window.learningTrackerData) {
+                        return null;
+                    }
+                    const data = window.learningTrackerData[key];
+                    return data ? JSON.parse(data) : null;
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    return null;
+                }
+            }
+
+            exportData() {
+                const data = {
+                    topics: this.topics,
+                    stats: this.stats,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `learning-tracker-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showToast('Data exported successfully! 📁');
+            }
+
+            importData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.topics && data.stats) {
+                            this.topics = data.topics;
+                            this.stats = data.stats;
+                            this.saveData('topics', this.topics);
+                            this.saveData('stats', this.stats);
+                            this.updateStats();
+                            this.renderTodayTopics();
+                            this.renderRevisionSections();
+                            this.showToast('Data imported successfully! 🎉');
+                        } else {
+                            this.showToast('Invalid file format', 'error');
+                        }
+                    } catch (error) {
+                        this.showToast('Error importing data', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            markRevisionComplete(topicId, revisionNumber) {
+                const topic = this.topics.find(t => t.id === topicId);
+                if (topic) {
+                    const revision = topic.revisions.find(r => r.revision === revisionNumber);
+                    if (revision) {
+                        revision.completed = true;
+                        this.saveData('topics', this.topics);
+                        this.renderRevisionSections();
+                        this.showToast('Revision marked as complete! ✅');
+                    }
+                }
+            }
+
+            resetAllData() {
+                if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                    this.topics = [];
+                    this.stats = {
+                        totalTopics: 0,
+                        streak: 0,
+                        lastStudyDate: null
+                    };
+                    this.saveData('topics', this.topics);
+                    this.saveData('stats', this.stats);
+                    this.updateStats();
+                    this.renderTodayTopics();
+                    this.renderRevisionSections();
+                    this.showToast('All data has been reset');
+                }
+            }
+
+            getAnalytics() {
+                const analytics = {
+                    totalTopics: this.topics.length,
+                    categoryCounts: {},
+                    difficultyCounts: {},
+                    monthlyProgress: {},
+                    completionRate: 0
+                };
+
+                this.topics.forEach(topic => {
+                    // Category counts
+                    analytics.categoryCounts[topic.category] = (analytics.categoryCounts[topic.category] || 0) + 1;
+                    
+                    // Difficulty counts
+                    analytics.difficultyCounts[topic.difficulty] = (analytics.difficultyCounts[topic.difficulty] || 0) + 1;
+                    
+                    // Monthly progress
+                    const month = new Date(topic.dateAdded).toISOString().substring(0, 7);
+                    analytics.monthlyProgress[month] = (analytics.monthlyProgress[month] || 0) + 1;
+                });
+
+                return analytics;
+            }
+
+            showAnalytics() {
+                const analytics = this.getAnalytics();
+                const modal = document.getElementById('topicModal');
+                document.getElementById('modalTitle').textContent = 'Learning Analytics';
+                document.getElementById('modalContent').innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <h4>📊 Statistics Overview</h4>
+                        <p>Total Topics: ${analytics.totalTopics}</p>
+                        <p>Current Streak: ${this.stats.streak} days</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4>📚 By Category</h4>
+                        ${Object.entries(analytics.categoryCounts).map(([category, count]) => `
+                            <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                <span>${category}</span>
+                                <span>${count}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4>🎯 By Difficulty</h4>
+                        ${Object.entries(analytics.difficultyCounts).map(([difficulty, count]) => `
+                            <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                <span>${difficulty}</span>
+                                <span>${count}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div>
+                        <h4>📈 Monthly Progress</h4>
+                        ${Object.entries(analytics.monthlyProgress).map(([month, count]) => `
+                            <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                <span>${month}</span>
+                                <span>${count} topics</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                modal.style.display = 'block';
+            }
+        }
+
+        // Close modal function
+        function closeModal() {
+            document.getElementById('topicModal').style.display = 'none';
+        }
+
+        // Initialize the tracker
+        const tracker = new LearningTracker();
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Add export/import buttons and analytics
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add additional controls to header
+            const header = document.querySelector('.header');
+            const controlsDiv = document.createElement('div');
+            controlsDiv.style.marginTop = '20px';
+            controlsDiv.style.textAlign = 'center';
+            controlsDiv.style.display = 'flex';
+            controlsDiv.style.gap = '10px';
+            controlsDiv.style.justifyContent = 'center';
+            controlsDiv.style.flexWrap = 'wrap';
+            
+            controlsDiv.innerHTML = `
+                <button class="btn btn-secondary" onclick="tracker.exportData()">📁 Export Data</button>
+                <label for="importFile" class="btn btn-secondary" style="cursor: pointer;">📂 Import Data</label>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="tracker.importData(event)">
+                <button class="btn" onclick="tracker.showAnalytics()">📊 Analytics</button>
+                <button class="btn btn-danger" onclick="tracker.resetAllData()">🗑️ Reset All</button>
+            `;
+            
+            header.appendChild(controlsDiv);
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('topicModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Auto-save functionality
+        setInterval(() => {
+            if (tracker.topics.length > 0) {
+                tracker.saveData('topics', tracker.topics);
+                tracker.saveData('stats', tracker.stats);
+            }
+        }, 30000); // Auto-save every 30 seconds
+
+        // Add service worker registration for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // This would register a service worker in a real application
+                console.log('Service Worker support detected');
+            });
+        }
+    </script>
+</body>
+</html>
